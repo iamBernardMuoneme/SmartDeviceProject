@@ -1,7 +1,35 @@
-# SmartDeviceProject
-Working on interpreting insights and trends from a smart devices data.
+# Smart Device Project
+Working on interpreting insights and trends from smart devices data.
 
-## Scenario
+## Table of Contents
+1.[Introduction](#introduction)
+2.[Features](#features)
+3.[Getting Started](#getting-started)
+4.[Data](#data)
+5.[Analysis](#analysis)
+6.[Results](#results)
+7.[Recommendations](#recommendations)
+
+##  Introduction
+Welcome to the Smart Devices Project, the complete data analysis process is performed on R, this project delves into the intricate details of participants' daily activities,focusing on aspects such as hourly steps,average daily steps, sleep duration and caloric expenditure. By analyzing these key metrics we aim to uncover trends,patterns and insights that provide a holistic view of participants' lifestyles.
+
+## Features
+1.**Hourly Steps Trend:**
+-Explore trends and patterns in steps recorded per hour throughtout the day.
+2.**Average Daily Steps:**
+-Gain insights into participants' overall activity levels through the evaluation of average daily steps.
+3.**Sleep Duration Analysis:**
+-Uncover patterns and trends in participants sleep habits with an indepth analysis of sleep duration data.
+4.**Calories Analysis:**
+-Explore variations in participants' energy expenditure by analyzing trends in calories burned.
+5.**Average Weight:**
+-Understanding the average weight distribution among particiants.
+6.**Results and Insights:**
+-Summarize key findings and insights obtained from the analysis to draw meaningful conclusions.
+
+
+
+## Getting Started
 
 You are a junior data analyst working on the marketing analyst team at Bellabeat, a high-tech manufacturer of health-focused
 products for women. Bellabeat is a successful small company, but they have the potential to become a larger player in the
@@ -27,3 +55,5 @@ address those limitations as you begin to work more with this data.
 
 ## Data Cleaning and Preprocessing
 Data downloaded from Kaggle as a zip folder containing 18 csv files, files containing varying numbers of columns and rows which were sorted,cleaned and merged for further analysis
+
+##
