@@ -3,11 +3,17 @@ Working on interpreting insights and trends from smart devices data.
 
 ## Table of Contents
 1.[Introduction](#introduction)
+
 2.[Features](#features)
+
 3.[Getting Started](#getting-started)
+
 4.[Data](#data)
+
 5.[Analysis](#analysis)
+
 6.[Results](#results)
+
 7.[Recommendations](#recommendations)
 
 ##  Introduction
@@ -16,14 +22,19 @@ Welcome to the Smart Devices Project, the complete data analysis process is perf
 ## Features
 1.**Hourly Steps Trend:**
 -Explore trends and patterns in steps recorded per hour throughtout the day.
+
 2.**Average Daily Steps:**
 -Gain insights into participants' overall activity levels through the evaluation of average daily steps.
+
 3.**Sleep Duration Analysis:**
 -Uncover patterns and trends in participants sleep habits with an indepth analysis of sleep duration data.
+
 4.**Calories Analysis:**
 -Explore variations in participants' energy expenditure by analyzing trends in calories burned.
+
 5.**Average Weight:**
 -Understanding the average weight distribution among particiants.
+
 6.**Results and Insights:**
 -Summarize key findings and insights obtained from the analysis to draw meaningful conclusions.
 
