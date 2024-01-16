@@ -1,0 +1,252 @@
+# Data Analysis Begins
+
+--importing files needed for analysis into R--
+
+library(tidyverse) 
+daily_activities <- read_csv('C:/Users/user/Documents/Fitbit/dailyActivity_merged.csv')
+
+## Creating DataFrame for DAILYSTEPS -- a file containing 940 observations and 3 variables
+
+daily_steps <- read_csv('C:/Users/user/Documents/Fitbit/dailySteps_merged.csv')
+
+## Creating DataFrame for SLEEPDAY - csv file containing 413 observations and 5 variables
+
+sleep_day <- read_csv('C:/Users/user/Documents/Fitbit/sleepDay_merged.csv')
+
+--running a quick summary to know the distinct number of IDS in each of the datframes
+
+```n_distinct(daily_activities$Id) -- 33 unique IDs
+   n_distinct(sleep_day$Id) --  24 unique IDs
+```
+
+--getting a summary of the components of the dataframes
+
+```daily_activities %>% 
+  select(TotalSteps,TotalDistance,SedentaryMinutes) %>% 
+  summary()
+```
+
+```sleep_day %>% 
+  select(TotalMinutesAsleep,TotalTimeInBed,TotalSleepRecords) %>% 
+  summary()
+```
+## Loading the weightlog information
+
+weightlog <- read_csv('C:/Users/user/Documents/Fitbit/weightLogInfo_merged.csv')
+View(weightlog)
+
+--weight was separated according to dates,so a quick summary of the average weight for each ID was required
+
+average_weight_per_id <- weightlog %>% 
+  group_by(Id) %>% 
+  summarise(Average_weight= mean(WeightKg,na.rm = TRUE)) %>% 
+  arrange(Average_weight)
+View(average_weight_per_id)
+
+# Plotting a bargraph of AVERAGE WEIGHT VS ID with rotated x-axis labels
+
+ggplot(average_weight_per_id, aes(x = as.factor(Id), y = Average_weight)) +
+  geom_col(fill = 'skyblue', color = 'black') +
+  labs(title = "Bar Graph of ID vs. Average Weight",
+       x = "ID",
+       y = "Average Weight") +
+  theme_minimal(base_size = 14) +  # Adjust base font size
+  theme(axis.text.x = element_text(angle = 45, hjust = 1,size = 8),
+        axis.title = element_text(size = 12, face = "bold"),  # Adjust axis title font size and style
+        plot.title = element_text(size = 14, face = "bold"),  # Adjust plot title font size and style
+        panel.grid.major = element_line(color = "lightgray", linetype = "dashed"),  # Add horizontal grid lines
+        panel.grid.minor = element_blank())  # Remove minor grid lines
+
+# Merging the DAILYACTIVITIES dataframe and SLEEPDAY dataframe together
+
+combined_data <- merge(daily_activities,sleep_day,by= 'Id')
+n_distinct(combined_data$Id)
+
+# Loading the hourlycalories table
+
+hourly_calories <- read_csv('C:/Users/user/Documents/Fitbit/hourlyCalories_merged.csv')
+
+# Group by Id and Calculate total calories
+
+hourly_calories_summary <- hourly_calories %>% 
+  group_by(Id) %>% 
+  summarise(Total_Calories = sum(Calories,na.rm = TRUE))
+View(hourly_calories_summary)
+
+# Summarizing daily activities
+
+daily_activities_summary <- daily_activities %>% 
+  group_by(Id) %>% 
+  summarise(Total_Steps=sum(TotalSteps),
+            Total_Distance= sum(TotalDistance),
+            Total_Calories = sum(Calories),
+            TrackerDistance = sum(TrackerDistance))
+View(daily_activities_summary)
+
+# Finding Relationships and Trends
+
+--Finding the relationship between Total steps taken and calories burned using scatterplot
+
+ggplot(data=daily_activities_summary,aes(x=Total_Steps,y=Total_Calories)) + geom_point() +
+  labs(title = "Daily Steps vs. Daily Caloric Expenditure",
+       x = "Total Daily Steps",
+       y = "Daily Caloric Expenditure")
+
+--Finding the relationship between Tracker distance and Total steps taken uaing scatterplot
+
+ggplot(data=daily_activities_summary,aes(x=TrackerDistance, y= Total_Steps)) + geom_point() + 
+  labs(title = "Tracker Distance vs. Total Steps",
+       x = "Tracker Distance",
+       y = "Total Steps")
+
+# Converting date column to a date type
+daily_activities$Date <- mdy(daily_activities$ActivityDate)
+
+# Aggregate data by Date and ID
+daily_steps_trend <- daily_activities %>% 
+  group_by(Date,Id) %>% 
+  summarise(mean_steps = mean(TotalSteps))
+
+# Visualize daily steps trend
+ggplot(data = daily_steps_trend,aes(x= Date, y = mean_steps, group = Id, color= Id)) +
+  geom_line() + labs(title = 'Trend in Daily Steps',
+                     x='Date',
+                     y='Mean Daily Steps') +
+  theme(legend.position = "none")
+
+# Line Chart for Average Trend in Daily Steps
+
+ggplot(daily_activities,aes(x= Date,y= TotalSteps,group= 1)) + stat_summary(fun = "mean", geom = "line",color = "blue") +
+  labs(title = "Average Trend in Daily Steps for All Participants",
+       x = "Date",
+       y = "Average Daily Steps") +
+  theme_minimal()
+
+# Using data from Sleep-day
+
+sleep_day$SleepDay <- as.Date(sleep_day$SleepDay,format = "%m/%d/%Y %H:%M:%S")
+
+# Aggregate sleep data by Date and Id
+daily_sleep_trend <- sleep_day %>% 
+  group_by(SleepDay,Id) %>% 
+  summarise(mean_minutes_asleep = mean(TotalMinutesAsleep))
+
+# Visualize trends in Sleep duration using Linechart
+
+ggplot(data = daily_sleep_trend,aes(x=SleepDay,y=mean_minutes_asleep,group=Id,color=Id)) +
+  geom_line() +
+  labs(title = "Trends in Sleep Duration",
+       x = "Date",
+       y ="Mean Minutes Asleep") +
+  theme(legend.position = "none")
+
+#Visualizing trends in sleep duration using histogram
+
+ggplot(data = sleep_day,aes(x=TotalMinutesAsleep,fill = SleepDay)) +
+  geom_histogram(binwidth = 30,position = "identity",alpha= 0.7) +
+  labs(title = "Distribution of Sleep Duration",
+       x = "Total Minutes Asleep",
+       y ="Frequency") +
+  theme_minimal()
+
+#PLOT2 
+
+ggplot(data = sleep_day,aes(x=TotalMinutesAsleep)) +
+  geom_histogram(binwidth = 30,fill= "#69b3a2",color="#1E2633") +
+  labs(title = "Distribution of Sleep Duration",
+       x = "Total Minutes Asleep",
+       y ="Frequency") +
+  theme_minimal()
+
+# 2D Densityplot for Daily Steps vs. Sleep Duration
+
+ggplot(combined_data,aes(x= TotalSteps , y= TotalMinutesAsleep ))+
+  geom_point(alpha = 0.2) + geom_density_2d(color= "yellow") +
+  labs(title = "2D Density Plot:Daily Steps vs. Sleep Duration",
+                                 x = "Total Daily Steps",
+                                 y = "Total Minutes Asleep") +
+  theme_minimal()
+
+
+# Aggregate Data by Date and Id for caloric expenditure
+
+daily_calories_trend <- daily_activities %>% 
+  group_by(Date,Id) %>% 
+  summarise(mean_calories = mean(Calories))
+
+# Plot the distribution of daily caloric expenditure
+ggplot(daily_calories_trend,aes(x = Date,y= mean_calories, group = Id, color = Id)) +
+  geom_line() + labs(title = "Trend in Daily Caloric Expenditure",
+                     x= "Date",
+                     y= "Mean Daily Calories") +
+  theme(legend.position = "none")
+
+# Correlation Analysis
+
+correlation_matrix <- combined_data %>% 
+  select(TotalSteps,TotalMinutesAsleep) %>% 
+  cor()
+print(correlation_matrix)
+
+library(ggplot2)
+
+
+# Convert the correlation matrix to long format for plotting
+correlation_long <- as.data.frame(as.table(correlation_matrix))
+
+# Creating a heatmap for the correlation matrix
+ggplot(correlation_long,aes(x=Var1, y= Var2,fill= Freq)) + geom_tile(color="white")+ scale_fill_gradient2(low ="blue",high = "red",mid="white",midpoint = 0,limit=c(-1,1),space="Lab",name="Correlation")+
+  labs(title = "Correlation Heatmap:Daily Steps and Sleep Duration",
+       x = "Variables",
+       y= "Variables") +
+  theme_minimal() + theme(axis.text.x = element_text(angle = 45,hjust = 1))
+
+# Regression Analysis
+
+regression_model <- lm(TotalMinutesAsleep~TotalSteps, data = combined_data)
+summary(regression_model)
+
+# Plot the regression line
+ggplot(combined_data,aes(x = TotalSteps, y= TotalMinutesAsleep )) +geom_point()+
+  geom_smooth(method = "lm",se = FALSE, color = "red")+
+  labs(title = "Linear Regression:Daily Steps vs. Sleep Duration",
+       x = "Total Daily Steps",
+       y= "Total Minutes Asleep")
+
+# VISUALIZATION FOR Average Calories burned
+ggplot(daily_activities,aes(x=Date , y = Calories, group= 1)) + stat_summary(fun = "mean",geom = "line",color ="green")+
+  labs(title = "Average Trend in Calories Burned for All Participants",
+       x = "Date",
+       y ="Average Calories Burned")+
+  theme_minimal()
+
+# HOURLY ANALYSIS FOR STEPS
+hourly_steps <- read_csv('C:/Users/user/Documents/Fitbit/hourlySteps_merged.csv')
+
+# Convert Activity Hour to Datetime format
+hourly_steps$ActivityHour <- as.POSIXct(hourly_steps$ActivityHour,format="%m/%d/%Y %I:%M:%S %p")
+
+# Extract the hour from the datetime
+hourly_steps$Hour <- hour(hourly_steps$ActivityHour)
+
+# Aggregate total steps for each hour
+steps_by_hour <- hourly_steps %>% 
+  group_by(Hour) %>% 
+  summarise(TotalSteps = sum(StepTotal))
+
+# Hour with the highest number of steps
+hour_with_highest_steps <- steps_by_hour %>% 
+  filter(TotalSteps==max(TotalSteps))
+View(hour_with_highest_steps)
+
+#Creating an Aggregated Line Chart - Average Hourly Steps
+ggplot(hourly_steps,aes(x=Hour,y=StepTotal)) + 
+  stat_summary(fun = "mean",geom = "line",color = "purple")+
+  labs(title = "Average Trend in Hourly Steps for All Participants",
+       x = "Hour of the Day",
+       y = "Average Hourly Steps") + 
+  theme_minimal()
+
+
+
+
