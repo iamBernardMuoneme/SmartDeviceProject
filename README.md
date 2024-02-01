@@ -78,6 +78,8 @@ After cleaning and analyzing data,a line chart was created using the R software 
 ### Average Daily Steps
 Using a line chart plotted in R, the highest points are noticed at April 16th and May 5th which indicates that most people walked more around those periods, however the chart was more at the consolidation period of 7,000 - 8-000 steps.
 
+![Average Trend in Daily Steps](https://github.com/iamBernardMuoneme/SmartDeviceProject/blob/main/Average%20Trend%20in%20Daily%20Steps%20for%20All%20Participants.png)
+
 ### Sleep Duration Analysis
 Using a histogram to display the frequency and total minutes of sleep, it was noticed that the peak period of the sleep duration falls highly around 400 minutes which is around 6hours daily.
 
