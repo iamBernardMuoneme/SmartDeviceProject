@@ -84,6 +84,8 @@ Using a line chart plotted in R, the highest points are noticed at April 16th an
 ### Sleep Duration Analysis
 Using a histogram to display the frequency and total minutes of sleep, it was noticed that the peak period of the sleep duration falls highly around 400 minutes which is around 6hours daily.
 
+![Sleep Duration Analysis](https://github.com/iamBernardMuoneme/SmartDeviceProject/blob/main/Distribution%20of%20Sleep%20Duration(color).png)
+
 ### Calories Analysis
 Loking for a trend in the average calories burned by all participants, a ine charted was plotted which shows the average calories burned was around 2,250 from April to May.
 
